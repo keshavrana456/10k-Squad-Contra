@@ -396,11 +396,13 @@ export default function Game(){
           // Must call fullscreen synchronously inside the gesture handler â€” Android blocks it inside called functions
           try{
             type FSEl=HTMLElement&{webkitRequestFullscreen?:()=>void;mozRequestFullScreen?:()=>void};
-            const el=canvas as FSEl;
+            const el=document.documentElement as FSEl;
             if(el.requestFullscreen)el.requestFullscreen();
             else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
             else if(el.mozRequestFullScreen)el.mozRequestFullScreen();
           }catch(_){}
+          // screen.orientation.lock also hides Android Chrome address bar independently
+          try{if(screen.orientation&&(screen.orientation as {lock?:(o:string)=>Promise<void>}).lock)(screen.orientation as {lock:(o:string)=>Promise<void>}).lock("landscape").catch(()=>{});}catch(_){}
           startGame();return;
         }
         if(Math.hypot(x-JX,y-JY)<DPAD_R&&dpadTouchId===null){
@@ -1893,6 +1895,20 @@ export default function Game(){
 
   return(
     <div style={{width:"100vw",height:"100vh",background:"#000",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+      {/* Always-present global styles â€” NOT inside showRotate conditional */}
+      <style>{`
+        @keyframes spin{
+          0%{transform:rotate(0deg);}
+          40%{transform:rotate(-90deg);}
+          60%{transform:rotate(-90deg);}
+          100%{transform:rotate(-90deg) scale(1.08);}
+        }
+        html:-webkit-full-screen,body:-webkit-full-screen,div:-webkit-full-screen{width:100vw!important;height:100vh!important;}
+        html:-moz-full-screen,body:-moz-full-screen,div:-moz-full-screen{width:100vw!important;height:100vh!important;}
+        html:fullscreen,body:fullscreen,div:fullscreen{width:100vw!important;height:100vh!important;}
+        :fullscreen canvas{display:block;width:100vw!important;height:100vh!important;object-fit:contain;}
+        :-webkit-full-screen canvas{display:block;width:100vw!important;height:100vh!important;object-fit:contain;}
+      `}</style>
       <canvas ref={cv} width={CW} height={CH} style={{
         imageRendering:"pixelated",
         width:`min(100vw, calc(100vh * ${CW} / ${CH}))`,
@@ -1907,17 +1923,6 @@ export default function Game(){
           <p style={{fontFamily:'"Press Start 2P",monospace',color:"#6b7280",fontSize:7,textAlign:"center",lineHeight:2}}>
             THIS GAME REQUIRES<br/>LANDSCAPE MODE
           </p>
-          <style>{`
-            @keyframes spin{
-              0%{transform:rotate(0deg);}
-              40%{transform:rotate(-90deg);}
-              60%{transform:rotate(-90deg);}
-              100%{transform:rotate(-90deg) scale(1.08);}
-            }
-            canvas:-webkit-full-screen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
-            canvas:-moz-full-screen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
-            canvas:fullscreen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
-          `}</style>
         </div>
       )}
     </div>
