@@ -21,7 +21,7 @@ export default function Game(){
     const canvas=cv.current!;
     const ctx=canvas.getContext("2d")!;
 
-    //──── AUDIO ─────────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ AUDIO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let AC:AudioContext|null=null;
     const ac=()=>{
       if(!AC)AC=new(window.AudioContext||(window as never as{webkitAudioContext:typeof AudioContext}).webkitAudioContext)();
@@ -63,7 +63,7 @@ export default function Game(){
       mBeat++;
     };
 
-    //──── PARTICLES ─────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ PARTICLES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface Par{x:number;y:number;vx:number;vy:number;life:number;ml:number;col:string;sz:number;}
     const pars:Par[]=[];
     const burst=(x:number,y:number,n:number,cols:string[],spd=3)=>{
@@ -74,7 +74,7 @@ export default function Game(){
       }
     };
 
-    //──── BULLETS ──────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ BULLETS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface Bul{x:number;y:number;vx:number;vy:number;pl:boolean;wp:Weapon;dmg:number;dead:boolean;pierce:number;sp?:number;sd?:number;}
     const buls:Bul[]=[];
     const spawnBul=(x:number,y:number,vx:number,vy:number,pl:boolean,wp:Weapon="M",pierce=0)=>{
@@ -82,21 +82,21 @@ export default function Game(){
       buls.push({x,y,vx,vy,pl,wp,dmg:wp==="L"?3:1,dead:false,pierce});
     };
 
-    //──── PLATFORMS / LEVEL GEOMETRY ────────────────────────────────────────
+    //â”€â”€â”€â”€ PLATFORMS / LEVEL GEOMETRY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface Plat{x:number;y:number;w:number;h:number;moving?:boolean;vx?:number;minX?:number;maxX?:number;}
     interface Bush{x:number;y:number;w:number;h:number;}   // hiding spot
 
-    //──── PICKUPS ──────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ PICKUPS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface Pick{x:number;y:number;vy:number;type:"S"|"L"|"F"|"R"|"B"|"1UP";timer:number;bounced:boolean;bob:number;dead:boolean;}
     const picks:Pick[]=[];
     const dropPick=(x:number,y:number,type:Pick["type"])=>picks.push({x,y,vy:-2.5,type,timer:450,bounced:false,bob:0,dead:false});
 
-    //──── DRONES ───────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ DRONES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface Drone{x:number;y:number;vx:number;wp:Weapon;dead:boolean;}
     const drones:Drone[]=[];
     let droneT=0;
 
-    //──── ENEMIES (creatures) ───────────────────────────────────────────────
+    //â”€â”€â”€â”€ ENEMIES (creatures) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     type EType="blob"|"spider"|"bat"|"worm"|"crab"|"spitter"|"bug";
     interface Enemy{
       x:number;y:number;w:number;h:number;hp:number;maxHp:number;
@@ -128,7 +128,7 @@ export default function Game(){
       });
     }
 
-    //──── LEVEL DATA ───────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ LEVEL DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const GY=CH-48; // base ground y
 
     // Contra-style multi-level stage layout
@@ -299,7 +299,7 @@ export default function Game(){
 
     const levels=[mkLvl1(),mkLvl2(),mkLvl3()];
 
-    //──── BOSS ─────────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ BOSS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     interface BossEye{x:number;y:number;hp:number;dead:boolean;regen:number;regenC:number;}
     interface Boss{
       x:number;y:number;w:number;h:number;hp:number;maxHp:number;
@@ -329,7 +329,7 @@ export default function Game(){
       };
     }
 
-    //──── PLAYER ───────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ PLAYER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const pl={
       x:100,y:GY,vx:0,vy:0,
       w:18,h:28,onGrd:false,
@@ -343,7 +343,7 @@ export default function Game(){
       jumpConsumed:false,
     };
 
-    //──── GAME STATE ────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ GAME STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const g={
       phase:"title" as Phase,
       world:0,camX:0,
@@ -354,10 +354,10 @@ export default function Game(){
       spawned:[] as boolean[],
     };
 
-    //──── INPUT ─────────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ INPUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const K:Record<string,boolean>={};
     let paused=false;
-    const tc={active:false,jx:0,jy:0,shoot:false,jump:false,bomb:false,jumpNow:false};
+    const tc={left:false,right:false,up:false,down:false,shoot:false,jump:false,bomb:false,jumpNow:false};
 
     const kd=(e:KeyboardEvent)=>{
       const prev=K[e.key];K[e.key]=true;
@@ -377,13 +377,27 @@ export default function Game(){
     const JBX=CW-108,JBY=CH-138;
     const BBX=CW-168,BBY=CH-85;
     const BR=34;
+    const DPAD_R=JR+24;
     const tp=(t:Touch)=>{const r=canvas.getBoundingClientRect();return{x:(t.clientX-r.left)*(CW/r.width),y:(t.clientY-r.top)*(CH/r.height)};};
+    const getDpadDir=(x:number,y:number)=>{
+      const dx=x-JX,dy=y-JY,dist=Math.hypot(dx,dy);
+      if(dist<10)return{l:false,r:false,u:false,d:false};
+      // 8-way: each axis is independent â€” diagonal when finger is between two directions
+      const nx=dx/dist,ny=dy/dist;
+      const THRESH=0.38; // ~sin(22.5Â°), lets pure cardinals stay clean
+      return{l:nx<-THRESH,r:nx>THRESH,u:ny<-THRESH,d:ny>THRESH};
+    };
+    let dpadTouchId:number|null=null;
     canvas.addEventListener("touchstart",e=>{
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
         const{x,y}=tp(t);
         if(g.phase==="title"||g.phase==="over"){startGame();return;}
-        if(Math.hypot(x-JX,y-JY)<JR+22){tc.active=true;tc.jx=x-JX;tc.jy=y-JY;}
+        if(Math.hypot(x-JX,y-JY)<DPAD_R&&dpadTouchId===null){
+          dpadTouchId=t.identifier;
+          const dir=getDpadDir(x,y);
+          tc.left=dir.l;tc.right=dir.r;tc.up=dir.u;tc.down=dir.d;
+        }
         if(Math.hypot(x-SBX,y-SBY)<BR+10)tc.shoot=true;
         if(Math.hypot(x-JBX,y-JBY)<BR+10){tc.jump=true;tc.jumpNow=true;}
         if(Math.hypot(x-BBX,y-BBY)<BR+10)tc.bomb=true;
@@ -391,26 +405,30 @@ export default function Game(){
     },{passive:false});
     canvas.addEventListener("touchmove",e=>{
       e.preventDefault();
-      if(!tc.active)return;
       for(const t of Array.from(e.changedTouches)){
-        const{x,y}=tp(t);
-        tc.jx=Math.max(-JR,Math.min(JR,x-JX));
-        tc.jy=Math.max(-JR,Math.min(JR,y-JY));
+        if(t.identifier===dpadTouchId){
+          const{x,y}=tp(t);
+          const dir=getDpadDir(x,y);
+          tc.left=dir.l;tc.right=dir.r;tc.up=dir.u;tc.down=dir.d;
+        }
       }
     },{passive:false});
     canvas.addEventListener("touchend",e=>{
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
+        if(t.identifier===dpadTouchId){
+          dpadTouchId=null;
+          tc.left=false;tc.right=false;tc.up=false;tc.down=false;
+        }
         const{x,y}=tp(t);
-        if(Math.hypot(x-JX,y-JY)<JR+28){tc.active=false;tc.jx=0;tc.jy=0;}
         if(Math.hypot(x-SBX,y-SBY)<BR+14)tc.shoot=false;
         if(Math.hypot(x-JBX,y-JBY)<BR+14)tc.jump=false;
         if(Math.hypot(x-BBX,y-BBY)<BR+14)tc.bomb=false;
       }
     },{passive:false});
 
-    //──── DRAW HELPERS ──────────────────────────────────────────────────────
-    // px-block helper: draw a P×P rect at grid coords
+    //â”€â”€â”€â”€ DRAW HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // px-block helper: draw a PÃ—P rect at grid coords
     const b=(x:number,y:number,w:number,h:number)=>ctx.fillRect(x*P,y*P,w*P,h*P);
 
     // Side-view parrot (origin = feet center)
@@ -420,19 +438,19 @@ export default function Game(){
       ctx.save();
 
       if(state==="prone"){
-        // Fully flat / prone — lying on the floor, gun forward
+        // Fully flat / prone â€” lying on the floor, gun forward
         const GN="#1a2e1a",GNL="#2d4a2d",GND="#0f1f0f";
         const TN="#4a3728",TNL="#6b4f3a";
         // Tail feathers (behind, pointing left)
         ctx.fillStyle=DP;b(-13,-4,4,2);b(-14,-2,4,2);b(-12,-1,3,2);b(-11,-5,3,2);
         ctx.fillStyle=PK;b(-10,-3,3,3);
-        // Main body — flat, horizontal, hugging floor
+        // Main body â€” flat, horizontal, hugging floor
         ctx.fillStyle=PK;b(-8,-6,17,7);b(-9,-4,1,5);b(9,-4,1,5);
         ctx.fillStyle=LP;b(-7,-5,14,5);
         ctx.fillStyle="#fce7f3";b(-5,-4,9,3); // belly sheen
         // Back wing resting on ground
         ctx.fillStyle=DP;b(-6,-7,6,3);b(-4,-8,4,2);
-        // Spiky crest — jutting up from head
+        // Spiky crest â€” jutting up from head
         ctx.fillStyle=DP;b(7,-14,2,5);b(9,-16,2,6);b(11,-14,2,5);b(13,-12,2,4);
         ctx.fillStyle="#f472b6";b(8,-13,2,4);b(10,-15,2,5);b(12,-12,2,3);
         // Head (right end of body)
@@ -453,7 +471,7 @@ export default function Game(){
         // Legs stretched back (tucked under body)
         ctx.fillStyle=SK;b(-5,0,4,2);b(-1,0,4,2);
         ctx.fillStyle="#c084fc";b(-6,1,3,1);b(-2,1,3,1); // claws
-        // ── AK47 lying flat, barrel extends far right ──
+        // â”€â”€ AK47 lying flat, barrel extends far right â”€â”€
         // Stock (rear, behind body)
         ctx.fillStyle=TN;b(-2,-4,5,4);b(-3,-3,2,4);b(-1,-1,4,2);
         ctx.fillStyle=TNL;b(-2,-4,5,1);
@@ -488,37 +506,31 @@ export default function Game(){
         ctx.fillStyle=PU;b(2,-1,3,2);
         ctx.restore();
       } else if(state==="jump"){
-        // Wings spread in jump
-        ctx.fillStyle=DP; // wings
-        b(-5,-8,5,3);b(-6,-10,4,2);
-        b(9,-8,5,3);b(10,-10,4,2);
-        // crest
-        ctx.fillStyle=DP;b(1,-16,2,3);b(3,-18,2,4);b(5,-19,2,5);b(7,-17,2,3);b(9,-15,2,2);
-        ctx.fillStyle=PK;b(2,-14,8,8);b(1,-12,1,5);b(10,-12,1,5);
-        ctx.fillStyle=LP;b(3,-13,5,5);
-        ctx.fillStyle=W;b(7,-13,3,3);ctx.fillStyle=R;b(8,-12,2,2);ctx.fillStyle="#000";b(8,-12,1,1);ctx.fillStyle=W;b(8,-13,1,1);
-        ctx.fillStyle=PU;b(10,-11,3,2);b(10,-10,2,1);ctx.fillStyle=LPU;b(10,-11,3,1);
-        // body
-        ctx.fillStyle=DP;b(-1,-2,4,3); // tail
-        ctx.fillStyle=PK;b(1,-7,11,9);b(0,-5,1,5);b(12,-5,1,5);
-        ctx.fillStyle=LP;b(2,-6,8,7);
-        // gun
-        ctx.fillStyle=DP;b(8,-5,5,3);ctx.fillStyle=DGY;b(12,-5,8,3);ctx.fillStyle=GY2;b(12,-5,8,1);
-        if(shoot){ctx.fillStyle="#facc15";b(20,-6,3,5);}
-        // legs tucked
-        ctx.fillStyle=SK;b(3,1,3,3);b(7,1,3,3);
+        // Full-size body (same proportions as stand) with tucked legs & spread wings
+        _parrotBody(frame,PK,DP,LP,PU,LPU,W,R,SK,GY2,DGY,0,false,true);
+        // Spread wings overlay
+        ctx.fillStyle=DP;
+        b(-7,-11,8,4);b(-10,-13,6,3);
+        b(13,-11,8,4);b(14,-13,6,3);
+        // Gun pointing forward (same as body gun, already drawn by _parrotBody)
+        if(shoot){ctx.fillStyle="#facc15";b(36,-10,6,9);ctx.fillStyle="#fde68a";b(37,-9,4,7);ctx.fillStyle="#fff";b(38,-8,2,5);}
       } else if(state==="up"||state==="diag"){
-        // Body same as stand/run
-        _parrotBody(frame,PK,DP,LP,PU,LPU,W,R,SK,GY2,DGY,state==="run"?frame:0);
-        // override gun to point up or diagonal
+        // Body without gun (noGun=true), then draw gun pointing up/diagonal
+        _parrotBody(frame,PK,DP,LP,PU,LPU,W,R,SK,GY2,DGY,0,true);
+        // Arm/wing holding gun
+        ctx.fillStyle=DP;b(8,-7,6,5);ctx.fillStyle=PK;b(9,-6,4,3);
         if(state==="up"){
-          ctx.fillStyle=DP;b(7,-14,3,5);
-          ctx.fillStyle=DGY;b(7,-21,3,8);ctx.fillStyle=GY2;b(7,-21,1,8);
-          if(shoot){ctx.fillStyle="#facc15";b(6,-23,5,3);}
+          // Vertical gun barrel
+          ctx.fillStyle="#4a3728";b(9,-12,4,5); // stock base
+          ctx.fillStyle="#1a2e1a";b(9,-22,3,12);ctx.fillStyle="#2d4a2d";b(9,-22,1,12);
+          ctx.fillStyle="#0f1f0f";b(11,-22,1,12);
+          ctx.fillStyle="#4a3728";b(8,-10,5,4); // grip
+          if(shoot){ctx.fillStyle="#facc15";b(7,-24,5,4);ctx.fillStyle="#fde68a";b(8,-23,3,3);ctx.fillStyle="#fff";b(9,-22,1,2);}
         } else {
-          ctx.fillStyle=DP;b(8,-12,4,3);
-          ctx.fillStyle=DGY;b(11,-17,5,2);b(13,-15,5,2);ctx.fillStyle=GY2;b(11,-17,5,1);
-          if(shoot){ctx.fillStyle="#facc15";b(17,-18,4,4);}
+          // Diagonal gun
+          ctx.fillStyle="#1a2e1a";b(11,-17,5,2);b(14,-15,5,2);ctx.fillStyle="#2d4a2d";b(11,-17,5,1);
+          ctx.fillStyle="#4a3728";b(9,-13,3,3);
+          if(shoot){ctx.fillStyle="#facc15";b(17,-18,4,4);ctx.fillStyle="#fde68a";b(18,-17,3,3);}
         }
       } else {
         _parrotBody(frame,PK,DP,LP,PU,LPU,W,R,SK,GY2,DGY,state==="run"?frame:0);
@@ -526,22 +538,29 @@ export default function Game(){
       ctx.restore();
     }
 
-    function _parrotBody(frame:number,PK:string,DP:string,LP:string,PU:string,LPU:string,W:string,R:string,SK:string,GY2:string,DGY:string,runF:number){
+    function _parrotBody(frame:number,PK:string,DP:string,LP:string,PU:string,LPU:string,W:string,R:string,SK:string,GY2:string,DGY:string,runF:number,noGun=false,jumpLegs=false){
       const lf=runF%8<4?1:-1;
       const GN="#1a2e1a",GNL="#2d4a2d",GND="#0f1f0f"; // gun metal greens
       const TN="#4a3728",TNL="#6b4f3a",TND="#2e1f14"; // tactical tan/stock
-      // animated legs with claws
-      ctx.fillStyle=SK;
-      b(3,1,3,6+lf*2);b(7,1,3,6-lf*2);
-      b(1,7+lf*2,5,2);b(5,7-lf*2,5,2);
-      // claws
-      ctx.fillStyle="#c084fc";
-      b(1,9+lf*2,2,2);b(3,9+lf*2,2,2);b(5,9+lf*2,2,2);
-      b(5,9-lf*2,2,2);b(7,9-lf*2,2,2);b(9,9-lf*2,2,2);
+      // legs
+      if(jumpLegs){
+        // Tucked legs for jump
+        ctx.fillStyle=SK;b(2,0,4,4);b(7,0,4,4);
+        ctx.fillStyle="#c084fc";b(1,3,2,2);b(3,3,2,2);b(6,3,2,2);b(8,3,2,2);
+      } else {
+        // animated legs with claws
+        ctx.fillStyle=SK;
+        b(3,1,3,6+lf*2);b(7,1,3,6-lf*2);
+        b(1,7+lf*2,5,2);b(5,7-lf*2,5,2);
+        // claws
+        ctx.fillStyle="#c084fc";
+        b(1,9+lf*2,2,2);b(3,9+lf*2,2,2);b(5,9+lf*2,2,2);
+        b(5,9-lf*2,2,2);b(7,9-lf*2,2,2);b(9,9-lf*2,2,2);
+      }
       // layered tail feathers
       ctx.fillStyle=DP;b(-5,-2,4,2);b(-6,0,4,2);b(-5,2,4,2);b(-4,-4,3,2);b(-3,-6,3,2);
       ctx.fillStyle=PK;b(-4,-1,3,3);
-      // body — larger, rounder
+      // body â€” larger, rounder
       ctx.fillStyle=PK;b(0,-9,14,11);b(-1,-7,1,8);b(14,-7,1,8);
       ctx.fillStyle=LP;b(1,-8,10,9);
       ctx.fillStyle=DP;b(1,-9,2,2);b(11,-9,2,2); // shoulder definition
@@ -554,7 +573,7 @@ export default function Game(){
       // tall spiky crest
       ctx.fillStyle=DP;b(0,-22,2,5);b(2,-26,2,6);b(4,-28,2,7);b(6,-30,2,8);b(8,-28,2,6);b(10,-25,2,5);b(12,-22,2,4);
       ctx.fillStyle="#f472b6";b(1,-21,2,4);b(3,-24,2,5);b(5,-26,2,6);b(7,-25,2,5);b(9,-22,2,4);
-      // head — bigger with cheek puff
+      // head â€” bigger with cheek puff
       ctx.fillStyle=PK;b(1,-19,13,11);b(0,-17,1,7);b(14,-17,1,6);b(2,-20,10,2);
       ctx.fillStyle=LP;b(2,-18,8,8);
       ctx.fillStyle="#fce7f3";b(3,-16,5,5); // cheek puff
@@ -563,52 +582,54 @@ export default function Game(){
       ctx.fillStyle=R;b(9,-17,3,4);
       ctx.fillStyle="#000";b(10,-16,2,2);
       ctx.fillStyle=W;b(9,-17,2,1); // eye glint
-      // purple beak — hooked parrot beak
+      // purple beak â€” hooked parrot beak
       ctx.fillStyle=PU;b(13,-16,5,3);b(15,-14,4,2);b(14,-13,3,2);
       ctx.fillStyle=LPU;b(13,-16,5,1);b(15,-14,3,1);
       ctx.fillStyle="#5b21b6";b(14,-13,2,1); // beak hook
       // nostril
       ctx.fillStyle="#6d28d9";b(14,-15,2,1);
-      // === AK47/SCAR-style assault rifle ===
-      // Front grip wing
-      ctx.fillStyle=DP;b(8,-7,6,5);ctx.fillStyle=PK;b(9,-6,4,3);
-      // Stock (rear of gun behind body)
-      ctx.fillStyle=TN;b(3,-6,6,4);b(2,-5,2,5);b(4,-3,4,3);
-      ctx.fillStyle=TNL;b(3,-6,5,2);
-      ctx.fillStyle=TND;b(3,-2,4,2); // cheekrest
-      // Receiver body
-      ctx.fillStyle=GN;b(8,-8,10,5);
-      ctx.fillStyle=GNL;b(8,-8,10,2); // top rail
-      ctx.fillStyle=GND;b(8,-4,10,1); // bottom
-      // Charging handle
-      ctx.fillStyle=GY2;b(15,-9,2,2);
-      // Trigger guard + grip
-      ctx.fillStyle=GND;b(13,-4,3,2);b(12,-3,5,2); // trigger guard
-      ctx.fillStyle=TN;b(13,-3,3,5); // pistol grip
-      ctx.fillStyle=TNL;b(14,-3,2,3);
-      // Curved magazine (AK style)
-      ctx.fillStyle=GN;b(14,0,5,7);b(15,6,4,3);b(13,1,2,5);
-      ctx.fillStyle=GNL;b(15,0,3,5);
-      ctx.fillStyle=GND;b(13,0,1,6);b(18,1,1,5);
-      // Front handguard
-      ctx.fillStyle=GND;b(18,-7,5,5);
-      ctx.fillStyle=GN;b(18,-6,5,3);
-      ctx.fillStyle=GNL;b(19,-6,3,2);
-      // Long barrel
-      ctx.fillStyle=GN;b(22,-7,12,3);
-      ctx.fillStyle=GNL;b(22,-7,12,1);
-      ctx.fillStyle=GND;b(22,-5,12,1);
-      // Gas tube above barrel
-      ctx.fillStyle=GND;b(18,-9,11,2);
-      ctx.fillStyle=GN;b(19,-9,9,1);
-      // Muzzle brake / compensator
-      ctx.fillStyle=GND;b(33,-8,4,5);b(34,-9,3,7);
-      ctx.fillStyle=GN;b(34,-8,2,5);
-      // Muzzle flash
-      if(Math.abs(pl.flash)>0&&frame%2===0){
-        ctx.fillStyle="#facc15";b(36,-10,6,9);
-        ctx.fillStyle="#fde68a";b(37,-9,4,7);
-        ctx.fillStyle="#fff";b(38,-8,2,5);
+      if(!noGun){
+        // === AK47/SCAR-style assault rifle ===
+        // Front grip wing
+        ctx.fillStyle=DP;b(8,-7,6,5);ctx.fillStyle=PK;b(9,-6,4,3);
+        // Stock (rear of gun behind body)
+        ctx.fillStyle=TN;b(3,-6,6,4);b(2,-5,2,5);b(4,-3,4,3);
+        ctx.fillStyle=TNL;b(3,-6,5,2);
+        ctx.fillStyle=TND;b(3,-2,4,2); // cheekrest
+        // Receiver body
+        ctx.fillStyle=GN;b(8,-8,10,5);
+        ctx.fillStyle=GNL;b(8,-8,10,2); // top rail
+        ctx.fillStyle=GND;b(8,-4,10,1); // bottom
+        // Charging handle
+        ctx.fillStyle=GY2;b(15,-9,2,2);
+        // Trigger guard + grip
+        ctx.fillStyle=GND;b(13,-4,3,2);b(12,-3,5,2); // trigger guard
+        ctx.fillStyle=TN;b(13,-3,3,5); // pistol grip
+        ctx.fillStyle=TNL;b(14,-3,2,3);
+        // Curved magazine (AK style)
+        ctx.fillStyle=GN;b(14,0,5,7);b(15,6,4,3);b(13,1,2,5);
+        ctx.fillStyle=GNL;b(15,0,3,5);
+        ctx.fillStyle=GND;b(13,0,1,6);b(18,1,1,5);
+        // Front handguard
+        ctx.fillStyle=GND;b(18,-7,5,5);
+        ctx.fillStyle=GN;b(18,-6,5,3);
+        ctx.fillStyle=GNL;b(19,-6,3,2);
+        // Long barrel
+        ctx.fillStyle=GN;b(22,-7,12,3);
+        ctx.fillStyle=GNL;b(22,-7,12,1);
+        ctx.fillStyle=GND;b(22,-5,12,1);
+        // Gas tube above barrel
+        ctx.fillStyle=GND;b(18,-9,11,2);
+        ctx.fillStyle=GN;b(19,-9,9,1);
+        // Muzzle brake / compensator
+        ctx.fillStyle=GND;b(33,-8,4,5);b(34,-9,3,7);
+        ctx.fillStyle=GN;b(34,-8,2,5);
+        // Muzzle flash
+        if(Math.abs(pl.flash)>0&&frame%2===0){
+          ctx.fillStyle="#facc15";b(36,-10,6,9);
+          ctx.fillStyle="#fde68a";b(37,-9,4,7);
+          ctx.fillStyle="#fff";b(38,-8,2,5);
+        }
       }
     }
 
@@ -767,7 +788,7 @@ export default function Game(){
       ctx.globalAlpha=1;ctx.filter="none";ctx.restore();
     }
 
-    //──── BACKGROUND DRAWING ────────────────────────────────────────────────
+    //â”€â”€â”€â”€ BACKGROUND DRAWING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function drawBG(lv:LevelDef,camX:number,frame:number){
       // Sky gradient
       const sg=ctx.createLinearGradient(0,0,0,GY);
@@ -825,7 +846,7 @@ export default function Game(){
           ctx.fillRect(bx+280,GY-65,8,65);
           for(let j=0;j<5;j++){const a2=(j/5)*Math.PI;ctx.fillRect(bx+284+Math.cos(a2)*22,GY-65+Math.sin(a2)*6,20,5);}
         }
-        // Near bushes/grass (0.8x) — these serve as enemy hiding spots
+        // Near bushes/grass (0.8x) â€” these serve as enemy hiding spots
         const gx2=-(camX*0.8)%200;
         ctx.fillStyle="#166534";
         for(let i=-1;i<6;i++){
@@ -1056,7 +1077,7 @@ export default function Game(){
       ctx.font='5px "Press Start 2P",monospace';
       if(pl.rapid>0){ctx.fillStyle="#facc15";ctx.fillText(`RAPID ${Math.ceil(pl.rapid/60)}`,CW-105,40);}
       if(pl.barrier>0){ctx.fillStyle="#67e8f9";ctx.fillText(`SHIELD ${Math.ceil(pl.barrier/60)}`,CW-108,50);}
-      if(pl.bombs>0){ctx.fillStyle="#fb923c";ctx.fillText(`BOMB×${pl.bombs}`,8,CH-10);}
+      if(pl.bombs>0){ctx.fillStyle="#fb923c";ctx.fillText(`BOMBÃ—${pl.bombs}`,8,CH-10);}
       ctx.textAlign="left";
     }
 
@@ -1126,26 +1147,57 @@ export default function Game(){
     }
 
     function drawTouchUI(){
-      // Joystick base
-      ctx.globalAlpha=0.55;
-      ctx.fillStyle="rgba(30,30,60,0.7)";ctx.beginPath();ctx.arc(JX,JY,JR+4,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle="rgba(100,180,255,0.7)";ctx.lineWidth=3;ctx.beginPath();ctx.arc(JX,JY,JR,0,Math.PI*2);ctx.stroke();
-      // Direction arrows
-      ctx.fillStyle="rgba(255,255,255,0.25)";
-      [[0,-1],[0,1],[-1,0],[1,0]].forEach(([dx,dy])=>{
-        ctx.beginPath();ctx.moveTo(JX+dx*(JR-10),JY+dy*(JR-10));
-        ctx.lineTo(JX+dx*(JR-10)-dy*6,JY+dy*(JR-10)-dx*6);
-        ctx.lineTo(JX+dx*(JR-10)+dy*6,JY+dy*(JR-10)+dx*6);
-        ctx.fill();
-      });
-      // Knob
-      const kActive=tc.active&&(Math.abs(tc.jx)>8||Math.abs(tc.jy)>8);
-      ctx.globalAlpha=kActive?0.92:0.65;
-      const grad=ctx.createRadialGradient(JX+tc.jx-4,JY+tc.jy-4,2,JX+tc.jx,JY+tc.jy,20);
-      grad.addColorStop(0,"rgba(180,220,255,0.95)");grad.addColorStop(1,"rgba(60,120,220,0.8)");
-      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(JX+tc.jx,JY+tc.jy,20,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle="rgba(255,255,255,0.6)";ctx.lineWidth=2;ctx.stroke();
-      // Buttons
+      const GAP=44,BTNR=28,DIAG=32;
+      // D-pad background circle
+      ctx.globalAlpha=0.38;
+      ctx.fillStyle="rgba(20,20,60,0.6)";
+      ctx.beginPath();ctx.arc(JX,JY,JR+8,0,Math.PI*2);ctx.fill();
+      // Center dot
+      ctx.globalAlpha=0.3;
+      ctx.fillStyle="rgba(150,180,255,0.5)";
+      ctx.beginPath();ctx.arc(JX,JY,10,0,Math.PI*2);ctx.fill();
+      // 4 cardinal arrow buttons
+      const dirs=[
+        {dx:0,dy:-GAP,label:"â–²",active:tc.up&&!tc.left&&!tc.right},
+        {dx:0,dy:GAP,label:"â–¼",active:tc.down&&!tc.left&&!tc.right},
+        {dx:-GAP,dy:0,label:"â—„",active:tc.left&&!tc.up&&!tc.down},
+        {dx:GAP,dy:0,label:"â–º",active:tc.right&&!tc.up&&!tc.down},
+      ];
+      for(const d of dirs){
+        const bx=JX+d.dx,by=JY+d.dy;
+        ctx.globalAlpha=d.active?0.92:0.55;
+        const bg=ctx.createRadialGradient(bx-BTNR*0.3,by-BTNR*0.3,2,bx,by,BTNR);
+        if(d.active){bg.addColorStop(0,"rgba(200,240,255,0.95)");bg.addColorStop(1,"rgba(60,140,255,0.85)");}
+        else{bg.addColorStop(0,"rgba(80,120,200,0.7)");bg.addColorStop(1,"rgba(20,40,100,0.6)");}
+        ctx.fillStyle=bg;ctx.beginPath();ctx.arc(bx,by,BTNR,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=d.active?"rgba(220,245,255,0.95)":"rgba(100,160,255,0.5)";
+        ctx.lineWidth=d.active?2.5:1.5;ctx.stroke();
+        ctx.fillStyle=d.active?"#fff":"rgba(200,220,255,0.85)";
+        ctx.font="16px monospace";ctx.textAlign="center";
+        ctx.shadowColor="rgba(0,0,0,0.7)";ctx.shadowBlur=3;
+        ctx.fillText(d.label,bx,by+6);
+        ctx.shadowBlur=0;
+      }
+      // 4 diagonal corner indicators (smaller, show when diagonal active)
+      const diags=[
+        {dx:-DIAG,dy:-DIAG,active:tc.left&&tc.up,label:"â†–"},
+        {dx:DIAG,dy:-DIAG,active:tc.right&&tc.up,label:"â†—"},
+        {dx:-DIAG,dy:DIAG,active:tc.left&&tc.down,label:"â†™"},
+        {dx:DIAG,dy:DIAG,active:tc.right&&tc.down,label:"â†˜"},
+      ];
+      for(const d of diags){
+        const bx=JX+d.dx,by=JY+d.dy;
+        ctx.globalAlpha=d.active?0.88:0.28;
+        ctx.fillStyle=d.active?"rgba(180,240,255,0.9)":"rgba(60,100,180,0.4)";
+        ctx.beginPath();ctx.arc(bx,by,16,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=d.active?"rgba(220,245,255,0.9)":"rgba(100,140,220,0.35)";
+        ctx.lineWidth=d.active?2:1;ctx.stroke();
+        ctx.fillStyle=d.active?"#fff":"rgba(160,190,255,0.6)";
+        ctx.font="13px monospace";ctx.textAlign="center";
+        ctx.fillText(d.label,bx,by+5);
+      }
+      ctx.textAlign="left";
+      // Right-side action buttons
       const btns=[{x:JBX,y:JBY,c1:"#22c55e",c2:"#14532d",l:"JUMP",a:tc.jump},
                   {x:SBX,y:SBY,c1:"#ef4444",c2:"#7f1d1d",l:"FIRE",a:tc.shoot},
                   {x:BBX,y:BBY,c1:"#f59e0b",c2:"#78350f",l:"BOMB",a:tc.bomb}];
@@ -1189,13 +1241,13 @@ export default function Game(){
       ctx.fillStyle="#fbbf24";ctx.fillRect(sx-4,d.y-2,8,4);
     }
 
-    //──── PLAYER RECT ───────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ PLAYER RECT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function plRect(){
-      if(pl.prone)return{x:pl.x-14,y:pl.y-8,w:40,h:8}; // flat prone — wide, very short
+      if(pl.prone)return{x:pl.x-14,y:pl.y-8,w:40,h:8}; // flat prone â€” wide, very short
       return{x:pl.x-pl.w/2,y:pl.y-pl.h,w:pl.w,h:pl.h};
     }
 
-    //──── SHOOT ────────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ SHOOT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function shootCD(){
       const r=pl.rapid>0;
       if(pl.wp==="M")return r?2:6;
@@ -1236,7 +1288,7 @@ export default function Game(){
       else if(w==="F"){spawnBul(bx,by,vx,vy-1.5,true,"F");spawnBul(bx,by,vx,vy+1.5,true,"F");sfxShoot();}
     }
 
-    //──── UPDATE ───────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ UPDATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function updBuls(lv:LevelDef){
       for(let i=buls.length-1;i>=0;i--){
         const b2=buls[i];
@@ -1272,10 +1324,10 @@ export default function Game(){
       if(pl.rapid>0)pl.rapid--;
       if(pl.flash>0)pl.flash--;
 
-      const kL=K["ArrowLeft"]||(tc.active&&tc.jx<-18);
-      const kR=K["ArrowRight"]||(tc.active&&tc.jx>18);
-      const kU=K["ArrowUp"]||(tc.active&&tc.jy<-20);
-      const kD=K["ArrowDown"]||(tc.active&&tc.jy>22);
+      const kL=K["ArrowLeft"]||tc.left;
+      const kR=K["ArrowRight"]||tc.right;
+      const kU=K["ArrowUp"]||tc.up;
+      const kD=K["ArrowDown"]||tc.down;
       const kSh=K["x"]||K["X"]||tc.shoot;
       const kJu=K[" "]||tc.jump;
       const kBo=K["z"]||K["Z"]||tc.bomb;
@@ -1401,12 +1453,12 @@ export default function Game(){
         if(e.flashT>0)e.flashT--;
 
         const dist=Math.abs(pl.x-e.x);
-        // No hidden/emerging — enemies are always present
+        // No hidden/emerging â€” enemies are always present
         if(e.hidden)e.hidden=false;
         if(e.emerging)e.emerging=false;
 
         // Movement: ALL enemies move LEFT (toward player who starts left)
-        // They don't walk back — they always advance left
+        // They don't walk back â€” they always advance left
         const moveLeft=()=>{e.x-=(e.type==="spider"||e.type==="spitter"?1.1:1.8);};
 
         if(e.type==="bat"){
@@ -1479,7 +1531,7 @@ export default function Game(){
           continue;
         }
 
-        // blob / spider — advance left, shoot
+        // blob / spider â€” advance left, shoot
         moveLeft();
         e.y=e.groundY-e.h;
         if(e.shootT<=0&&dist<350){
@@ -1496,7 +1548,7 @@ export default function Game(){
         }
       }
 
-      // ── BULLET vs ENEMY (world-space, no camera) ──────────────────────────
+      // â”€â”€ BULLET vs ENEMY (world-space, no camera) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       for(const b2 of buls){
         if(b2.dead||!b2.pl)continue;
         for(const e of enemies){
@@ -1568,7 +1620,7 @@ export default function Game(){
       }
     }
 
-    //──── BOSS UPDATE ───────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ BOSS UPDATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function updBoss(){
       if(!boss)return;
       const bs=boss;
@@ -1619,8 +1671,9 @@ export default function Game(){
       },1400);
     }
 
-    //──── GAME FLOW ─────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ GAME FLOW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function startGame(){
+      try{const el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});else if((el as never as{webkitRequestFullscreen:()=>void}).webkitRequestFullscreen)(el as never as{webkitRequestFullscreen:()=>void}).webkitRequestFullscreen();}catch(_){}
       try{pl.hi=parseInt(localStorage.getItem("ph")||"0");}catch(_){}
       g.world=0;g.phase="intro";g.introT=0;g.camX=0;
       g.spawned=new Array(levels[0].spawns.length).fill(false);
@@ -1640,12 +1693,12 @@ export default function Game(){
     }
     function fullReset(){pl.score=0;startGame();}
 
-    //──── OVERLAY SCREENS ───────────────────────────────────────────────────
+    //â”€â”€â”€â”€ OVERLAY SCREENS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function drawTitle(frame:number){
       ctx.fillStyle="#000";ctx.fillRect(0,0,CW,CH);
       for(let i=0;i<55;i++){ctx.fillStyle=`rgba(255,255,255,${0.15+Math.sin(frame*0.04+i)*0.12})`;ctx.fillRect((i*137+Math.floor(frame*0.4))%CW,(i*83)%180,2,2);}
       ctx.fillStyle="#dc2626";ctx.font='26px "Press Start 2P",monospace';ctx.textAlign="center";ctx.fillText("CONTRA",CW/2,65);
-      ctx.fillStyle="#f97316";ctx.font='8px "Press Start 2P",monospace';ctx.fillText("— SQUAD EDITION —",CW/2,83);
+      ctx.fillStyle="#f97316";ctx.font='8px "Press Start 2P",monospace';ctx.fillText("â€” SQUAD EDITION â€”",CW/2,83);
       // Side-view parrot on title
       ctx.save();ctx.translate(CW/2-12,210);ctx.scale(2.2,2.2);
       drawParrot(Math.floor(frame/10)%2===0?"stand":"run",frame,false);
@@ -1691,7 +1744,7 @@ export default function Game(){
       ctx.textAlign="left";
     }
 
-    //──── MAIN LOOP ─────────────────────────────────────────────────────────
+    //â”€â”€â”€â”€ MAIN LOOP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let frame=0,lastT=0,rafId=0;
     g.phase="title";
     try{pl.hi=parseInt(localStorage.getItem("ph")||"0");}catch(_){}
@@ -1733,7 +1786,7 @@ export default function Game(){
       // Particles
       for(let i=pars.length-1;i>=0;i--){const p=pars[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.14;p.vx*=0.98;p.life--;if(p.life<=0)pars.splice(i,1);}
 
-      //── RENDER ──
+      //â”€â”€ RENDER â”€â”€
       drawBG(lv,g.camX,frame);
       drawGround(lv,g.camX,frame);
       drawBushes(lv,g.camX);   // bushes in front of ground (hiding spots)
@@ -1838,7 +1891,7 @@ export default function Game(){
       }}/>
       {showRotate&&(
         <div style={{position:"fixed",inset:0,background:"#000",zIndex:9999,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:32,padding:24}}>
-          <div style={{animation:"spin 2s ease-in-out infinite",fontSize:72,lineHeight:1}}>📱</div>
+          <div style={{animation:"spin 2s ease-in-out infinite",fontSize:72,lineHeight:1}}>ðŸ“±</div>
           <p style={{fontFamily:'"Press Start 2P",monospace',color:"#f97316",fontSize:13,textAlign:"center",lineHeight:2}}>
             ROTATE YOUR<br/>DEVICE
           </p>
