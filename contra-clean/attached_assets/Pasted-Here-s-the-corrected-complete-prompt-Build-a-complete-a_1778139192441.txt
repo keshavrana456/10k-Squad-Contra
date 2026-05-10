@@ -1,0 +1,195 @@
+Here's the corrected, complete prompt:
+
+---
+
+> Build a complete, accurate Contra NES/arcade clone in a single HTML file using HTML5 Canvas and vanilla JavaScript. The only change from original Contra is the player character — replace Bill Rizer with a **pink parrot with a purple beak**. Everything else must be faithful to Contra.
+>
+> **PLAYER — Pink Parrot (purple beak):**
+> - Pixel-art pink parrot: round pink body, purple beak, small wings as arms, tail feathers, white eyes with black pupils
+> - **Stand:** upright, gun held forward from wing-tip
+> - **Run:** alternating leg cycle, wings bob slightly, 4-frame animation
+> - **Jump:** wings spread wide, tail feathers flare
+> - **Prone (lie flat on floor):** body horizontal on ground, gun aimed forward — activated by holding DOWN on ground. Player hitbox shrinks to floor level. Bullets fire horizontally at floor height
+> - **Jump + DOWN:** dive down faster
+> - **Shoot while running:** beak open, muzzle flash at wing-tip
+> - **Death:** feathers burst outward as pink particles, body spins and falls
+> - 3 lives. On death: brief explosion, respawn at last safe position. Game over after all lives lost
+> - Invincibility frames (2 seconds, player blinks) after respawning
+>
+> **COLLISION & BULLET RULES (critical — fix these exactly):**
+> - Every bullet has a lifespan tied to distance traveled, NOT time. Bullet dies exactly when it exits the canvas boundary — never before
+> - Enemy spawn state: enemies are in IDLE state until player crosses a trigger distance threshold (approximately 300px from enemy). Before trigger: enemy stands still or does a slow patrol. After trigger: enemy activates, runs toward player, shoots, behaves aggressively
+> - Newly spawned enemies have a 20-frame grace period where they cannot be hit and cannot hit the player (spawn protection, prevents instant collision on entry)
+> - Bullets from ALL sources (player and enemy) are destroyed only on: hitting a solid platform/ground, hitting a valid target, or leaving canvas bounds. No time-based bullet expiry
+> - Player bullets pass through destroyed enemies immediately — no sticky collision
+>
+> **WEAPONS (exact Contra arcade weapons):**
+> - **Default Machine Gun** — rapid single straight shots, unlimited ammo
+> - **Spread Gun (S)** — 5 bullets simultaneously fanning out at fixed angles (up-left, left, straight, right-up, right), slow fire rate, very powerful
+> - **Laser (L)** — single long piercing beam that travels full screen width instantly, hits all enemies in line, short cooldown
+> - **Fireball (F)** — two fireballs arc up and down simultaneously in sine wave paths, travel full screen
+> - **Rapid Bullet (R)** — same as default but 3x fire rate, bullets travel faster
+> - Weapon switch: collecting a new weapon instantly replaces current. Losing a life reverts to default gun
+> - HUD shows current weapon letter icon, top-right corner
+>
+> **WEAPON CAPSULE AIRDROPS:**
+> - A red blinking flying drone/capsule enters from right side of screen, flies slowly left at mid-height
+> - Shoot the drone to destroy it — it bursts with an explosion particle effect
+> - Immediately after burst: the weapon capsule (colored pill with weapon letter) is released and falls straight down under gravity
+> - Capsule bounces once on ground, then sits still and flashes
+> - Player walks over capsule to collect it
+> - If not collected within 10 seconds, capsule disappears
+> - Drones spawn on a timer (every 25–35 seconds), always carry a random weapon
+>
+> **ENEMIES (Contra-accurate, all hand-drawn with Canvas 2D fillRect/arc — no images):**
+> - **Basic Soldier:** runs toward player at medium speed, fires single shots, 1 hit kill, entry from right edge
+> - **Heavy Gunner:** slower, fires 3-shot bursts, takes 2 hits, wears helmet
+> - **Grenadier:** lobs arcing grenades that bounce on ground and explode after 1.5 seconds, 1 hit kill
+> - **Flamethrower Soldier:** short-range continuous fire cone, 2 hits to kill
+> - **Turret Emplacement:** bolted to ground, rotates barrel to track player, fires 2-shot bursts, takes 3 hits to destroy, does NOT move
+> - **Parachute Soldier:** drops from top of screen on a parachute, shoots while descending, lands and becomes Basic Soldier
+> - **Shield Soldier:** holds a shield blocking all frontal bullets. Must be shot from above (while jumping) or hit with Spread/Laser. 2 hits
+> - All enemies: idle/patrol before trigger distance, then activate. Spawn with parachute drop or run-in from edge animation
+>
+> **BOSSES (one per world, Contra-accurate):**
+> - **World 1 Boss — Jungle Base Gate:**
+>   - Giant armored door with a rotating gun turret on top and two side cannons
+>   - Fires shells that travel in arcs, deploys 2 soldiers every 10 seconds
+>   - Weak point: blinking red core in center of door, takes 12 hits
+>   - Destroyed: massive multi-stage explosion sequence, door collapses
+> - **World 2 Boss — Alien Core:**
+>   - Central pulsing organic mass with 4 eye-cannons arranged around it (top, bottom, left, right)
+>   - Each eye rotates and fires aimed shots at player
+>   - Destroy all 4 eyes to expose core, shoot core 8 times to kill
+>   - Eyes regenerate once after being destroyed (total 8 eyes + 8 core hits)
+> - **World 3 Boss — Red Falcon (final):**
+>   - Giant alien face/skull that fills half the screen
+>   - Three attack phases: bullet spread, homing missiles, screen-wide laser sweep
+>   - Takes 20 hits, switches phase every 6 hits
+>   - Death: epic multi-second explosion sequence, victory screen follows
+> - Boss health bar: red bar at bottom of screen during all boss fights
+> - Boss intro: screen flashes red, "WARNING" text blinks 3 times, screen shake, boss slides in
+>
+> **LEVELS — 3 Worlds, each with run-and-gun stage + boss stage:**
+> - **World 1: Jungle**
+>   - Ground: dark brown mud with grass tufts
+>   - Background layer 1 (far): dark sky, large moon or sun
+>   - Background layer 2 (mid): silhouetted mountain range, scrolls at 0.2x speed
+>   - Background layer 3 (near): dense jungle trees, scrolls at 0.6x speed
+>   - Foreground: mud ground, sandbag bunkers, destructible barrels (explode when shot, chain-react nearby barrels), rope bridges
+>   - Floating platforms: wooden planks at varying heights
+>   - Water hazard section: player moves at 60% speed, no spread gun underwater
+> - **World 2: Military Base**
+>   - Metal floor tiles, steel gray walls
+>   - Background: factory pipes, warning lights flashing red/yellow alternately
+>   - Moving platforms: horizontal conveyors and vertical lifts
+>   - Destructible crates, exploding fuel drums
+>   - Flashing hazard stripes on walls
+> - **World 3: Alien Lair**
+>   - Organic fleshy purple/red ground and walls, drawn with irregular shapes
+>   - Background: pulsing bioluminescent patterns, alien egg clusters
+>   - Platforms: bio-mechanical growths
+>   - Acid pit hazards (instant death on contact)
+> - All worlds: full parallax scrolling (3 layers), camera follows player horizontally, locks vertically
+> - Stage clear: "MISSION COMPLETE" banner, score tally screen, transition to next stage
+>
+> **BONUS DROPS & PICKUPS:**
+> - All pickups flash with alternating colors and bob up-down sinusoidally
+> - Disappear after exactly 8 seconds with a fast-blink warning in last 2 seconds
+> - **Weapon Capsules (S, L, F, R):** from shot drones as described above
+> - **Barrier (B):** white aura shield around player for 12 seconds, blocks all damage, pulses visually
+> - **Extra Life (1UP):** pink parrot icon, extremely rare, +1 life
+> - **Falcon (falcon icon):** destroys all on-screen enemies instantly with screen-wide explosion wave
+> - **Rapid Fire (lightning bolt):** triples fire rate for 15 seconds, countdown shown in HUD
+> - Pickup collection: flash screen briefly, play pickup sound, display pickup name as floating text above player
+>
+> **TERRAIN DETAILS:**
+> - Solid platforms: player lands on top, can jump up through from below (one-way collision)
+> - Destructible barrels/crates: 1 shot destroys, explosion radius damages nearby enemies
+> - Moving platforms: player rides them, correct momentum transfer
+> - Pit/acid detection: if player falls below ground level → death, respawn
+> - Rope bridges: visual only, act as solid ground
+>
+> **HUD (styled exactly like Contra NES):**
+> - Font: "Press Start 2P" from Google Fonts for ALL text
+> - Top-left: pink parrot icon × life count (e.g. 🦜×3)
+> - Top-center: SCORE in white, HI-SCORE below in yellow
+> - Top-right: current weapon letter in a box
+> - Boss fights only: red boss health bar at bottom with "BOSS" label
+> - Between stages: black screen with white stage title text ("AREA 1" etc.) for 2 seconds
+> - "GAME OVER" screen: large red text, final score, high score, "PRESS START" blink
+>
+> **SCREEN EFFECTS:**
+> - Screen shake: on explosions, boss hits, player death (translate canvas randomly ±4px for 12 frames)
+> - White flash: single frame full-white overlay on large explosions
+> - Scanline effect: draw semi-transparent black horizontal lines every 2px over entire canvas every frame (CSS or canvas)
+> - Muzzle flash: small yellow circle at gun tip for 2 frames on every shot
+> - Hit flash: enemy sprite flashes white for 3 frames when hit
+>
+> **CONTROLS — DESKTOP:**
+> - Arrow Left/Right: move
+> - Arrow Up or SPACE: jump
+> - Arrow Down (while on ground): go prone (lie flat)
+> - Arrow Down (while jumping): fast fall
+> - X key: shoot (hold for auto-fire)
+> - Z key: use Falcon bomb (if collected)
+> - P key: pause
+>
+> **CONTROLS — MOBILE (always visible on touch devices):**
+> - **Left side — Aim Joystick:**
+>   - Large circular joystick pad, semi-transparent white
+>   - Inner thumb dot follows finger position within joystick radius
+>   - Joystick controls AIM DIRECTION of bullets (8 directions: left, right, up-left, up-right, up, down-left, down-right, and prone/down)
+>   - Horizontal joystick movement also moves player left/right
+>   - Pushing joystick fully down while on ground: go prone
+> - **Right side — Action Buttons:**
+>   - **JUMP button** (top-center of right cluster): large green circle labeled "JUMP" — tap to jump, tap again while airborne for nothing (no double jump)
+>   - **SHOOT button** (right of cluster): large red circle labeled "SHOOT" — hold for continuous auto-fire in current aim direction
+>   - **BOMB button** (left of cluster): smaller yellow circle labeled "BOMB" — uses Falcon pickup if available
+>   - All buttons: press scale-down animation (scale 0.9 on touchstart, restore on touchend)
+>   - Buttons and joystick are 40% opacity at rest, 80% opacity when touched
+>   - Joystick diameter: 120px. Buttons: 64px diameter each
+>
+> **AUDIO (Web Audio API — zero external files, all procedural):**
+> - All sounds generated with OscillatorNode + GainNode
+> - **Shoot:** 800hz square wave, 0.08s duration, fast decay
+> - **Spread gun shoot:** 5 rapid overlapping shoot sounds
+> - **Jump:** sine wave sweep 200hz→600hz over 0.15s
+> - **Explosion (small):** white noise burst, 0.3s, low-pass filtered
+> - **Explosion (large/boss):** white noise burst, 0.8s, lower cutoff, reverb-like tail
+> - **Pickup:** major arpeggio (C-E-G) each note 0.08s, square wave
+> - **Extra life:** full ascending scale, square wave
+> - **Enemy death:** descending tone 400hz→100hz, 0.2s
+> - **Boss warning drone:** 60hz sine, slow amplitude pulse, plays during WARNING sequence
+> - **Background music:** 3-voice chiptune loop
+>   - Voice 1 (melody): Contra stage 1 inspired — repeating 8-bar phrase, square wave
+>   - Voice 2 (bass): root notes, triangle wave, octave below melody
+>   - Voice 3 (drums): white noise hi-hat every 8th note, low-pass kick on beat 1 and 3
+>   - Music changes per world (tempo increases, different melody)
+>   - Music pauses during boss warning, resumes with boss music (faster tempo, minor key)
+>
+> **GAME FLOW:**
+> - **Title Screen:** black background, "CONTRA" in large red pixel font, pink parrot sprite below it, "PRESS START / CLICK TO BEGIN" blinking in white. HI-SCORE displayed
+> - **Stage Intro:** black screen, "AREA X" white text centered, 2 second hold, fade into gameplay
+> - **Gameplay:** continuous horizontal scroll until stage end trigger
+> - **Boss Fight:** screen stops scrolling, boss enters, music changes
+> - **Stage Clear:** "MISSION COMPLETE" banner, score bonus tally (time bonus, enemy kill bonus)
+> - **World Clear:** brief cutscene text (e.g. "THE JUNGLE BASE HAS BEEN DESTROYED")
+> - **Game Over:** "GAME OVER" red, score, hi-score (saved to localStorage), "CONTINUE? 9…8…7…" countdown — click to continue from world start using same score, or let expire for full reset
+> - **Victory (after World 3 boss):** "YOU WIN" screen, pink parrot flies across, final score, credits scroll
+>
+> **TECHNICAL REQUIREMENTS:**
+> - Single HTML file, no external files except Google Fonts CDN link for "Press Start 2P"
+> - All sprites: pure Canvas 2D API (fillRect, arc, beginPath, bezierCurveTo) — absolutely no image files or sprite sheets
+> - 60fps via requestAnimationFrame with fixed timestep (deltaTime capped at 50ms)
+> - Object pooling: max 150 bullets, 200 particles, 50 enemies active at once — oldest removed if over limit
+> - Canvas: 680×380px, centered on page, black background, letterboxed
+> - Pixel-perfect collision: AABB bounding box for all entities
+> - Enemies outside camera view + 200px buffer are frozen (not updated) to save performance
+> - Camera: smooth follow on X axis (lerp 0.1), locked Y axis
+> - All game state in a single `game` object for easy save/load
+> - Pause (P key) freezes all updates, dims canvas 50%, shows "PAUSED" text
+
+---
+
+This prompt is precise, fixes every bug you mentioned, and leaves zero ambiguity for the AI to deviate from. Paste it directly into Replit AI, Claude, or ChatGPT and it should generate a very accurate result.
