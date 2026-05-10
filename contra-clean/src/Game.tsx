@@ -392,7 +392,17 @@ export default function Game(){
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
         const{x,y}=tp(t);
-        if(g.phase==="title"||g.phase==="over"){startGame();return;}
+        if(g.phase==="title"||g.phase==="over"){
+          // Must call fullscreen synchronously inside the gesture handler â€” Android blocks it inside called functions
+          try{
+            type FSEl=HTMLElement&{webkitRequestFullscreen?:()=>void;mozRequestFullScreen?:()=>void};
+            const el=canvas as FSEl;
+            if(el.requestFullscreen)el.requestFullscreen();
+            else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
+            else if(el.mozRequestFullScreen)el.mozRequestFullScreen();
+          }catch(_){}
+          startGame();return;
+        }
         if(Math.hypot(x-JX,y-JY)<DPAD_R&&dpadTouchId===null){
           dpadTouchId=t.identifier;
           const dir=getDpadDir(x,y);
@@ -1673,7 +1683,6 @@ export default function Game(){
 
     //â”€â”€â”€â”€ GAME FLOW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     function startGame(){
-      try{const el=document.documentElement;if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});else if((el as never as{webkitRequestFullscreen:()=>void}).webkitRequestFullscreen)(el as never as{webkitRequestFullscreen:()=>void}).webkitRequestFullscreen();}catch(_){}
       try{pl.hi=parseInt(localStorage.getItem("ph")||"0");}catch(_){}
       g.world=0;g.phase="intro";g.introT=0;g.camX=0;
       g.spawned=new Array(levels[0].spawns.length).fill(false);
@@ -1905,6 +1914,9 @@ export default function Game(){
               60%{transform:rotate(-90deg);}
               100%{transform:rotate(-90deg) scale(1.08);}
             }
+            canvas:-webkit-full-screen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
+            canvas:-moz-full-screen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
+            canvas:fullscreen{width:100vw!important;height:100vh!important;object-fit:contain;background:#000;}
           `}</style>
         </div>
       )}
