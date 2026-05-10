@@ -388,33 +388,27 @@ export default function Game(){
       return{l:nx<-THRESH,r:nx>THRESH,u:ny<-THRESH,d:ny>THRESH};
     };
     let dpadTouchId:number|null=null;
+    let shootTouchId:number|null=null;
+    let jumpTouchId:number|null=null;
+    let bombTouchId:number|null=null;
+    const BTN_R=BR+22; // generous hit radius for all action buttons
+
     canvas.addEventListener("touchstart",e=>{
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
         const{x,y}=tp(t);
-        if(g.phase==="title"||g.phase==="over"){
-          // Must call fullscreen synchronously inside the gesture handler â€” Android blocks it inside called functions
-          try{
-            type FSEl=HTMLElement&{webkitRequestFullscreen?:()=>void;mozRequestFullScreen?:()=>void};
-            const el=document.documentElement as FSEl;
-            if(el.requestFullscreen)el.requestFullscreen();
-            else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
-            else if(el.mozRequestFullScreen)el.mozRequestFullScreen();
-          }catch(_){}
-          // screen.orientation.lock also hides Android Chrome address bar independently
-          try{if(screen.orientation&&(screen.orientation as {lock?:(o:string)=>Promise<void>}).lock)(screen.orientation as {lock:(o:string)=>Promise<void>}).lock("landscape").catch(()=>{});}catch(_){}
-          startGame();return;
-        }
+        if(g.phase==="title"||g.phase==="over"){startGame();return;}
         if(Math.hypot(x-JX,y-JY)<DPAD_R&&dpadTouchId===null){
           dpadTouchId=t.identifier;
           const dir=getDpadDir(x,y);
           tc.left=dir.l;tc.right=dir.r;tc.up=dir.u;tc.down=dir.d;
         }
-        if(Math.hypot(x-SBX,y-SBY)<BR+10)tc.shoot=true;
-        if(Math.hypot(x-JBX,y-JBY)<BR+10){tc.jump=true;tc.jumpNow=true;}
-        if(Math.hypot(x-BBX,y-BBY)<BR+10)tc.bomb=true;
+        if(Math.hypot(x-SBX,y-SBY)<BTN_R&&shootTouchId===null){tc.shoot=true;shootTouchId=t.identifier;}
+        if(Math.hypot(x-JBX,y-JBY)<BTN_R&&jumpTouchId===null){tc.jump=true;tc.jumpNow=true;jumpTouchId=t.identifier;}
+        if(Math.hypot(x-BBX,y-BBY)<BTN_R&&bombTouchId===null){tc.bomb=true;bombTouchId=t.identifier;}
       }
     },{passive:false});
+
     canvas.addEventListener("touchmove",e=>{
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
@@ -423,21 +417,22 @@ export default function Game(){
           const dir=getDpadDir(x,y);
           tc.left=dir.l;tc.right=dir.r;tc.up=dir.u;tc.down=dir.d;
         }
+        // action buttons: do NOT change state on move â€” only track by ID on end
       }
     },{passive:false});
-    canvas.addEventListener("touchend",e=>{
+
+    const releaseTouches=(e:TouchEvent)=>{
       e.preventDefault();
       for(const t of Array.from(e.changedTouches)){
-        if(t.identifier===dpadTouchId){
-          dpadTouchId=null;
-          tc.left=false;tc.right=false;tc.up=false;tc.down=false;
-        }
-        const{x,y}=tp(t);
-        if(Math.hypot(x-SBX,y-SBY)<BR+14)tc.shoot=false;
-        if(Math.hypot(x-JBX,y-JBY)<BR+14)tc.jump=false;
-        if(Math.hypot(x-BBX,y-BBY)<BR+14)tc.bomb=false;
+        if(t.identifier===dpadTouchId){dpadTouchId=null;tc.left=false;tc.right=false;tc.up=false;tc.down=false;}
+        // Release buttons by finger ID regardless of where finger is on screen
+        if(t.identifier===shootTouchId){tc.shoot=false;shootTouchId=null;}
+        if(t.identifier===jumpTouchId){tc.jump=false;jumpTouchId=null;}
+        if(t.identifier===bombTouchId){tc.bomb=false;bombTouchId=null;}
       }
-    },{passive:false});
+    };
+    canvas.addEventListener("touchend",releaseTouches,{passive:false});
+    canvas.addEventListener("touchcancel",releaseTouches,{passive:false});
 
     //â”€â”€â”€â”€ DRAW HELPERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // px-block helper: draw a PÃ—P rect at grid coords
@@ -1159,7 +1154,7 @@ export default function Game(){
     }
 
     function drawTouchUI(){
-      const GAP=44,BTNR=28,DIAG=32;
+      const GAP=44,BTNR=28;
       // D-pad background circle
       ctx.globalAlpha=0.38;
       ctx.fillStyle="rgba(20,20,60,0.6)";
@@ -1190,24 +1185,7 @@ export default function Game(){
         ctx.fillText(d.label,bx,by+6);
         ctx.shadowBlur=0;
       }
-      // 4 diagonal corner indicators (smaller, show when diagonal active)
-      const diags=[
-        {dx:-DIAG,dy:-DIAG,active:tc.left&&tc.up,label:"â†–"},
-        {dx:DIAG,dy:-DIAG,active:tc.right&&tc.up,label:"â†—"},
-        {dx:-DIAG,dy:DIAG,active:tc.left&&tc.down,label:"â†™"},
-        {dx:DIAG,dy:DIAG,active:tc.right&&tc.down,label:"â†˜"},
-      ];
-      for(const d of diags){
-        const bx=JX+d.dx,by=JY+d.dy;
-        ctx.globalAlpha=d.active?0.88:0.28;
-        ctx.fillStyle=d.active?"rgba(180,240,255,0.9)":"rgba(60,100,180,0.4)";
-        ctx.beginPath();ctx.arc(bx,by,16,0,Math.PI*2);ctx.fill();
-        ctx.strokeStyle=d.active?"rgba(220,245,255,0.9)":"rgba(100,140,220,0.35)";
-        ctx.lineWidth=d.active?2:1;ctx.stroke();
-        ctx.fillStyle=d.active?"#fff":"rgba(160,190,255,0.6)";
-        ctx.font="13px monospace";ctx.textAlign="center";
-        ctx.fillText(d.label,bx,by+5);
-      }
+      // Diagonal active: highlight the two active cardinals brighter (no separate buttons)
       ctx.textAlign="left";
       // Right-side action buttons
       const btns=[{x:JBX,y:JBY,c1:"#22c55e",c2:"#14532d",l:"JUMP",a:tc.jump},
@@ -1883,6 +1861,8 @@ export default function Game(){
   },[]);
 
   const [showRotate, setShowRotate] = useState(false);
+  const [isFs, setIsFs] = useState(false);
+
   useEffect(()=>{
     const isMobile="ontouchstart" in window||navigator.maxTouchPoints>0;
     if(!isMobile)return;
@@ -1892,6 +1872,37 @@ export default function Game(){
     window.addEventListener("orientationchange",check);
     return()=>{window.removeEventListener("resize",check);window.removeEventListener("orientationchange",check);};
   },[]);
+
+  useEffect(()=>{
+    const onFsChange=()=>setIsFs(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange",onFsChange);
+    document.addEventListener("webkitfullscreenchange",onFsChange);
+    return()=>{document.removeEventListener("fullscreenchange",onFsChange);document.removeEventListener("webkitfullscreenchange",onFsChange);};
+  },[]);
+
+  const isMobileDevice="ontouchstart" in window||navigator.maxTouchPoints>0;
+
+  function requestFs(){
+    try{
+      type FSEl=HTMLElement&{webkitRequestFullscreen?:()=>void};
+      const el=document.documentElement as FSEl;
+      if(el.requestFullscreen)el.requestFullscreen();
+      else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
+    }catch(_){}
+    try{
+      type OL=ScreenOrientation&{lock:(o:string)=>Promise<void>};
+      (screen.orientation as OL).lock("landscape").catch(()=>{});
+    }catch(_){}
+  }
+
+  function exitFs(){
+    try{
+      type FSD=Document&{webkitExitFullscreen?:()=>void};
+      const d=document as FSD;
+      if(d.exitFullscreen)d.exitFullscreen();
+      else if(d.webkitExitFullscreen)d.webkitExitFullscreen();
+    }catch(_){}
+  }
 
   return(
     <div style={{width:"100vw",height:"100vh",background:"#000",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
@@ -1914,6 +1925,22 @@ export default function Game(){
         width:`min(100vw, calc(100vh * ${CW} / ${CH}))`,
         height:`min(100vh, calc(100vw * ${CH} / ${CW}))`,
       }}/>
+      {isMobileDevice&&(
+        <button
+          onTouchStart={e=>{e.stopPropagation();isFs?exitFs():requestFs();}}
+          onClick={()=>isFs?exitFs():requestFs()}
+          style={{
+            position:"fixed",top:10,right:10,zIndex:9998,
+            background:"rgba(0,0,0,0.55)",border:"1.5px solid rgba(255,255,255,0.35)",
+            borderRadius:8,color:"#fff",fontSize:20,width:40,height:40,
+            display:"flex",alignItems:"center",justifyContent:"center",
+            cursor:"pointer",touchAction:"manipulation",userSelect:"none",
+          }}
+          aria-label={isFs?"Exit fullscreen":"Enter fullscreen"}
+        >
+          {isFs?"âœ•":"â›¶"}
+        </button>
+      )}
       {showRotate&&(
         <div style={{position:"fixed",inset:0,background:"#000",zIndex:9999,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:32,padding:24}}>
           <div style={{animation:"spin 2s ease-in-out infinite",fontSize:72,lineHeight:1}}>ðŸ“±</div>
